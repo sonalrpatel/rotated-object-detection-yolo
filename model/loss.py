@@ -80,10 +80,11 @@ def bbox_xywha_ciou(pred_boxes, target_boxes):
         S = 1 - iou
         alpha = v / (S + v)
 
-    ciou_loss = iou - (u + alpha * v)
-    ciou_loss = torch.clamp(ciou_loss, min=-1.0, max=1.0)
+    ciou = iou - (u + alpha * v)
+    ciou = torch.clamp(ciou, min=-1.0, max=1.0)
 
     angle_factor = torch.abs(torch.cos(pred_boxes[:, 4] - target_boxes[:, 4]))
     # skew_iou = torch.abs(iou * angle_factor) + 1e-16
     skew_iou = iou * angle_factor
-    return skew_iou, ciou_loss
+
+    return skew_iou, ciou
