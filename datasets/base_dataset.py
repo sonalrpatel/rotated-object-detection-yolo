@@ -50,13 +50,15 @@ class ImageDataset(Dataset):
         img, _ = pad_to_square(img, 0)
         # Resize
         img = resize(img, self.img_size)
-        #transform = transforms.ToPILImage(mode="RGB")
-        #image = transform(img)
-        #image.show()
+        # transform = transforms.ToPILImage(mode="RGB")
+        # image = transform(img)
+        # image.show()
         return img_path, img
 
+
 class BaseDataset(Dataset):
-    def __init__(self, img_size=608, sample_size=600, augment=True, mosaic=True, multiscale=True, normalized_labels=False):
+    def __init__(self, img_size=608, sample_size=600, augment=True, mosaic=True, multiscale=True,
+                 normalized_labels=False):
         self.img_size = img_size
         self.augment = augment
         self.mosaic = mosaic
@@ -125,13 +127,13 @@ class BaseDataset(Dataset):
         # Extract image as PyTorch tensor
         img = np.array(Image.open(img_path).convert('RGB'))
         h, w, c = img.shape
-        
+
         # Handle images with less than three channels
         if c != 3:
             img = np.transpose(np.stack(np.array([img, img, img])), (1, 2, 0))
 
         if self.augment:
-            #img = gaussian_noise(img) # np.random.normal(mean, var ** 0.5, image.shape) would increase run time significantly
+            # img = gaussian_noise(img) # np.random.normal(mean, var ** 0.5, image.shape) would increase run time significantly
             hsv(img)
 
         return img, (h, w)
@@ -196,7 +198,6 @@ class BaseDataset(Dataset):
             labels4 = torch.cat(labels4, 0)
 
         return img4, labels4
-
 
     def load_target(self, index, label_factor, pad, padded_size, boundary):
         """
@@ -281,6 +282,5 @@ class BaseDataset(Dataset):
             print(label_path)
             assert False, "Label file not found"
 
-
-    def load_files(self):
+    def load_files(self, label_path):
         raise NotImplementedError

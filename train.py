@@ -13,6 +13,8 @@ from lib.scheduler import CosineAnnealingWarmupRestarts
 from lib.logger import *
 from lib.options import TrainOptions
 
+os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
+
 
 def weights_init_normal(m):
     if isinstance(m, torch.nn.Conv2d):
@@ -56,7 +58,7 @@ class Train:
         model_dict = self.model.state_dict()
 
         # 1. filter out unnecessary keys
-        # 第552項開始為yololayer，訓練時不需要用到
+        # Item 552 starts as yololayer, which is not needed for training
         # pretrained_dict = {k: v for k, v in pretrained_dict.items() if np.shape(model_dict[k]) == np.shape(v)}
         pretrained_dict = {k: v for i, (k, v) in enumerate(pretrained_dict.items()) if i < 552}
         # 2. overwrite entries in the existing state dict
@@ -70,7 +72,7 @@ class Train:
         torch.save(self.model.state_dict(), save_folder)
 
     def save_opts(self):
-        """Save options to disk so we know what we ran this experiment with
+        """Save options to disk, so we know what we ran this experiment with
         """
         to_save = self.args.__dict__.copy()
         with open(os.path.join(self.model_path, 'opt.json'), 'w') as f:
@@ -81,7 +83,7 @@ class Train:
 
         tensorboard_log = {}
         loss_table_name = ["Step: %d/%d" % (global_step, total_step),
-                            "loss", "reg_loss", "conf_loss", "cls_loss"]
+                           "loss", "reg_loss", "conf_loss", "cls_loss"]
         loss_table = [loss_table_name]
 
         temp = ["YoloLayer1"]
@@ -123,20 +125,21 @@ class Train:
         mosaic = False if self.args.no_mosaic else True
         multiscale = False if self.args.no_multiscale else True
 
-        train_dataset, train_dataloader = load_data(self.args.data_folder, self.args.dataset, "train", self.args.img_size, self.args.sample_size,
-                                                        self.args.batch_size, augment=augment, mosaic=mosaic, multiscale=multiscale)
+        train_dataset, train_dataloader = load_data(self.args.data_folder, self.args.dataset, "train",
+                                                    self.args.img_size, self.args.sample_size, self.args.batch_size,
+                                                    augment=augment, mosaic=mosaic, multiscale=multiscale)
         num_iters_per_epoch = len(train_dataloader)
         scheduler_iters = round(self.args.epochs * len(train_dataloader) / self.args.subdivisions)
         total_step = num_iters_per_epoch * self.args.epochs
 
         optimizer = torch.optim.Adam(self.model.parameters(), lr=self.args.lr)
         scheduler = CosineAnnealingWarmupRestarts(optimizer,
-                                                first_cycle_steps=round(scheduler_iters),
-                                                max_lr=self.args.lr,
-                                                min_lr=1e-5,
-                                                warmup_steps=round(scheduler_iters * 0.1),
-                                                cycle_mult=1,
-                                                gamma=1)
+                                                  first_cycle_steps=round(scheduler_iters),
+                                                  max_lr=self.args.lr,
+                                                  min_lr=1e-5,
+                                                  warmup_steps=round(scheduler_iters * 0.1),
+                                                  cycle_mult=1,
+                                                  gamma=1)
 
         start_time = time.time()
         self.model.train()
@@ -158,11 +161,12 @@ class Train:
                     scheduler.step()
 
                 self.log(total_loss, epoch, global_step, total_step, start_time)
-        
+
             self.save_model()
             print("Model is saved!")
 
         print("Done!")
+
 
 if __name__ == "__main__":
     parser = TrainOptions()

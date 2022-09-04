@@ -2,17 +2,27 @@ import os
 import numpy as np
 import torch
 import glob
+from tqdm import tqdm
 
-from .base_dataset import BaseDataset
+from datasets.base_dataset import BaseDataset
+
 
 class DOTADataset(BaseDataset):
-    def __init__(self, data_dir, class_names, img_size=416, sample_size=600, augment=True, mosaic=True, multiscale=True, normalized_labels=False):
+    def __init__(self, data_dir, class_names, img_size=416, sample_size=600, augment=True, mosaic=True, multiscale=True,
+                 normalized_labels=False):
         super().__init__(img_size, sample_size, augment, mosaic, multiscale, normalized_labels)
-        self.img_files = sorted(glob.glob(os.path.join(data_dir, "*.png")))
-        self.label_files = [path.replace(".png", ".txt") for path in self.img_files]
+        self.img_files = sorted(glob.glob(os.path.join(data_dir, "images/*.png")))
+        self.label_files = [path.replace("images", "labels").replace("png", "txt") for path in tqdm(self.img_files)]
+        self.verify_path()
         self.category = {}
         for i, name in enumerate(class_names):
             self.category[name.replace(" ", "-")] = i
+
+    def verify_path(self):
+        for i, file in tqdm(enumerate(self.label_files)):
+            if not(os.path.exists(file)):
+                self.label_files.pop(i)
+                self.img_files.pop(i)
 
     def load_files(self, label_path):
         lines = open(label_path, 'r').readlines()
@@ -33,7 +43,7 @@ class DOTADataset(BaseDataset):
         num_targets = len(label)
         if not num_targets:
             return None, None, None, None, None, None, 0
-        
+
         x1 = torch.tensor(x1)
         y1 = torch.tensor(y1)
         x2 = torch.tensor(x2)
