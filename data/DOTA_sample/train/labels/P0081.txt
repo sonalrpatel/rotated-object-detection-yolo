@@ -1,0 +1,3 @@
+imagesource:GoogleEarth
+gsd:0.132550937186
+123 144 540 144 540 589 123 589 roundabout 0

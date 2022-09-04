@@ -1,0 +1,4 @@
+imagesource:GoogleEarth
+gsd:0.514015305079
+508 173 527 182 504 223 486 212 tennis-court 0
+449 301 409 363 343 319 383 258 baseball-diamond 0
