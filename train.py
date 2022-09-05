@@ -78,11 +78,11 @@ class Train:
         with open(os.path.join(self.model_path, 'opt.json'), 'w') as f:
             json.dump(to_save, f, indent=2)
 
-    def log(self, total_loss, epoch, global_step, total_step, start_time):
+    def log(self, total_loss, epoch, global_step, total_step, local_step, num_iters_per_epoch, start_time):
         log = "\n---- [Epoch %d/%d] ----\n" % (epoch + 1, self.args.epochs)
 
         tensorboard_log = {}
-        loss_table_name = ["Step: %d/%d" % (global_step, total_step),
+        loss_table_name = ["Step: %d/%d %d/%d" % (local_step, num_iters_per_epoch, global_step, total_step),
                            "loss", "reg_loss", "conf_loss", "cls_loss"]
         loss_table = [loss_table_name]
 
@@ -144,8 +144,8 @@ class Train:
         start_time = time.time()
         self.model.train()
         for epoch in range(self.args.epochs):
-
             for batch, (_, imgs, targets) in enumerate(train_dataloader):
+                local_step = batch + 1
                 global_step = num_iters_per_epoch * epoch + batch + 1
                 imgs = imgs.to(self.device)
                 targets = targets.to(self.device)
@@ -160,7 +160,7 @@ class Train:
                     optimizer.zero_grad()
                     scheduler.step()
 
-                self.log(total_loss, epoch, global_step, total_step, start_time)
+                self.log(total_loss, epoch, global_step, total_step, local_step, num_iters_per_epoch, start_time)
 
             self.save_model()
             print("Model is saved!")
