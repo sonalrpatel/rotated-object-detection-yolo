@@ -8,6 +8,8 @@ class TrainOptions:
         self.parser.add_argument("--weights_path", type=str, default="weights/pretrained/yolov4.pth",
                                  help="path to pretrained weights file")
         self.parser.add_argument("--model_name", type=str, default="trash", help="new model name")
+        self.parser.add_argument("--override_model_input_check", type=bool, default=False,
+                                 help="if set, it asks user whether to override the model or not, else force override")
         self.parser.add_argument("--epochs", type=int, default=50, help="number of epochs")
         self.parser.add_argument("--lr", type=float, default=0.001, help="learning rate")
         self.parser.add_argument("--batch_size", type=int, default=2, help="size of batches")
@@ -16,11 +18,11 @@ class TrainOptions:
         self.parser.add_argument("--sample_size", type=int, default=1000,
                                  help="size of cropped area when doing mosaic augmentation")
         self.parser.add_argument("--number_of_classes", type=int, default=16, help="number of your output classes")
-        self.parser.add_argument("--no_augmentation", action="store_true",
+        self.parser.add_argument("--no_augmentation", type=bool, default=True,
                                  help="if set, disable data augmentation in training")
-        self.parser.add_argument("--no_mosaic", action="store_true",
+        self.parser.add_argument("--no_mosaic", type=bool, default=True,
                                  help="if set, disable mosaic data augmentation in training")
-        self.parser.add_argument("--no_multiscale", action="store_true",
+        self.parser.add_argument("--no_multiscale", type=bool, default=True,
                                  help="if set, disable multiscale data in training")
         self.parser.add_argument("--dataset", type=str, default="DOTA", choices=["UCAS_AOD", "DOTA", "custom"],
                                  help="specify dataset to use for training")

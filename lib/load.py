@@ -7,7 +7,7 @@ from datasets.UCASAOD_dataset import UCASAODDataset
 from datasets.DOTA_dataset import DOTADataset
 
 
-def load_data(data_dir, dataset, action, img_size=608, sample_size=600, batch_size=4, shuffle=True, augment=True, mosaic=True, multiscale=True):
+def load_data(data_dir, dataset, action, img_size=416, sample_size=600, batch_size=4, shuffle=True, augment=True, mosaic=True, multiscale=True):
     class_names = load_class_names(os.path.join(data_dir, "class.names"))
     data_dir = os.path.join(data_dir, action)
 
@@ -24,6 +24,6 @@ def load_data(data_dir, dataset, action, img_size=608, sample_size=600, batch_si
         raise NotImplementedError
 
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=shuffle,
-                                                   pin_memory=True, collate_fn=dataset.collate_fn)
+                                             pin_memory=True, collate_fn=dataset.collate_fn)
 
     return dataset, dataloader

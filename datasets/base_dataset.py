@@ -57,7 +57,7 @@ class ImageDataset(Dataset):
 
 
 class BaseDataset(Dataset):
-    def __init__(self, img_size=608, sample_size=600, augment=True, mosaic=True, multiscale=True,
+    def __init__(self, img_size=416, sample_size=600, augment=True, mosaic=True, multiscale=True,
                  normalized_labels=False):
         self.img_size = img_size
         self.augment = augment
@@ -106,16 +106,18 @@ class BaseDataset(Dataset):
 
     def collate_fn(self, batch):
         paths, imgs, targets = list(zip(*batch))
-        # Add sample index to targets
-        for i, boxes in enumerate(targets):
-            boxes[:, 0] = i
+        # # Add sample index to targets
+        # for i, boxes in enumerate(targets):
+        #     boxes[:, 0] = i
         targets = torch.cat(targets, 0)
         # Selects new image size every tenth batch
         if self.multiscale and self.batch_count % 10 == 0:
             self.img_size = random.choice(range(self.min_size, self.max_size + 1, 32))
         # Resize images to input shape
         imgs = torch.stack([resize(img, self.img_size) for img in imgs])
+        # Batch count
         self.batch_count += 1
+
         return paths, imgs, targets
 
     def __len__(self):
@@ -133,7 +135,8 @@ class BaseDataset(Dataset):
             img = np.transpose(np.stack(np.array([img, img, img])), (1, 2, 0))
 
         if self.augment:
-            # img = gaussian_noise(img) # np.random.normal(mean, var ** 0.5, image.shape) would increase run time significantly
+            # img = gaussian_noise(img)
+            # np.random.normal(mean, var ** 0.5, image.shape) would increase run time significantly
             hsv(img)
 
         return img, (h, w)

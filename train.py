@@ -42,12 +42,15 @@ class Train:
 
     def check_model_path(self):
         if os.path.exists(self.model_path):
-            inp = input(f">> Model name exists, do you want to override model name ? [y:N]")
-            if inp.lower()[0] == "y":
-                shutil.rmtree(self.model_path)
+            if self.args.override_model_input_check:
+                inp = input(f">> Model name exists, do you want to override model name ? [y:N]")
+                if inp.lower()[0] == "y":
+                    shutil.rmtree(self.model_path)
+                else:
+                    print(">> Stop training!")
+                    exit(1)
             else:
-                print(">> Stop training!")
-                exit(1)
+                shutil.rmtree(self.model_path)
         os.makedirs(self.model_path)
         os.makedirs(os.path.join(self.model_path, "logs"))
 
