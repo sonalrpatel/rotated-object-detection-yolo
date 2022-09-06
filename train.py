@@ -46,13 +46,15 @@ class Train:
                 inp = input(f">> Model name exists, do you want to override model name ? [y:N]")
                 if inp.lower()[0] == "y":
                     shutil.rmtree(self.model_path)
+                    os.makedirs(self.model_path)
+                    os.makedirs(os.path.join(self.model_path, "logs"))
                 else:
                     print(">> Stop training!")
                     exit(1)
-            else:
-                shutil.rmtree(self.model_path)
-        os.makedirs(self.model_path)
-        os.makedirs(os.path.join(self.model_path, "logs"))
+        else:
+            os.makedirs(self.model_path)
+        if not os.path.exists(os.path.join(self.model_path, "logs")):
+            os.makedirs(os.path.join(self.model_path, "logs"))
 
     def load_model(self):
         pretrained_dict = torch.load(self.args.weights_path)

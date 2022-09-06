@@ -11,6 +11,7 @@ from lib.load import load_data
 from lib.utils import load_class_names
 from model.yolo import Yolo
 
+
 # Reference: https://github.com/eriklindernoren/PyTorch-YOLOv3/blob/master/detect.py
 
 def ap_per_class(tp, conf, pred_cls, target_cls):
@@ -131,7 +132,7 @@ def get_batch_statistics(outputs, targets, iou_threshold):
                     true_positives[pred_i] = 1
                     detected_boxes += [box_index]
 
-        #true_positives.sort()
+        # true_positives.sort()
         batch_metrics.append([true_positives, pred_scores, pred_labels])
     return batch_metrics
 
@@ -178,7 +179,8 @@ class Test:
 
         # Get dataloader
         test_dataset, test_dataloader = load_data(self.args.data_folder, self.args.dataset, "test", self.args.img_size,
-                                                    batch_size=self.args.batch_size, shuffle=False, augment=False, mosaic=False, multiscale=False)
+                                                  batch_size=self.args.batch_size, shuffle=False, augment=False,
+                                                  mosaic=False, multiscale=False)
 
         print("Compute mAP...")
 

@@ -4,10 +4,10 @@ import argparse
 class TrainOptions:
     def __init__(self):
         self.parser = argparse.ArgumentParser()
-        self.parser.add_argument("--data_folder", type=str, default="data/DOTA_sample", help="path to train dataset")
+        self.parser.add_argument("--data_folder", type=str, default="data/UCAS_AOD_sample", help="path to train dataset")
         self.parser.add_argument("--weights_path", type=str, default="weights/pretrained/yolov4.pth",
                                  help="path to pretrained weights file")
-        self.parser.add_argument("--model_name", type=str, default="trash", help="new model name")
+        self.parser.add_argument("--model_name", type=str, default="UCAS_AOD", help="new model name")
         self.parser.add_argument("--override_model_input_check", type=bool, default=False,
                                  help="if set, it asks user whether to override the model or not, else force override")
         self.parser.add_argument("--epochs", type=int, default=50, help="number of epochs")
@@ -24,7 +24,7 @@ class TrainOptions:
                                  help="if set, disable mosaic data augmentation in training")
         self.parser.add_argument("--no_multiscale", type=bool, default=True,
                                  help="if set, disable multiscale data in training")
-        self.parser.add_argument("--dataset", type=str, default="DOTA", choices=["UCAS_AOD", "DOTA", "custom"],
+        self.parser.add_argument("--dataset", type=str, default="UCAS_AOD", choices=["UCAS_AOD", "DOTA", "custom"],
                                  help="specify dataset to use for training")
 
     def parse(self):
@@ -58,7 +58,7 @@ class DetectOptions:
         self.parser.add_argument("--conf_thres", type=float, default=0.7, help="object confidence threshold")
         self.parser.add_argument("--nms_thres", type=float, default=0.2, help="iou thresshold for non-maximum suppression")
         self.parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
-        self.parser.add_argument("--img_size", type=int, default=608, help="size of each image dimension")
+        self.parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
         self.parser.add_argument("--number_of_classes", type=int, default=2, help="number of your output classes")
         self.parser.add_argument("--ext", type=str, default="png", choices=["png", "jpg"], help="Image file format")
 
