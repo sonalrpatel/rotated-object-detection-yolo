@@ -2,14 +2,16 @@ import os
 import numpy as np
 import torch
 import glob
+from tqdm import tqdm
 
-from .base_dataset import BaseDataset
+from datasets.base_dataset import BaseDataset
+
 
 class UCASAODDataset(BaseDataset):
     def __init__(self, data_dir, class_names, img_size=416, sample_size=600, augment=True, mosaic=True, multiscale=True, normalized_labels=False):
         super().__init__(img_size, sample_size, augment, mosaic, multiscale, normalized_labels)
-        self.img_files = sorted(glob.glob(os.path.join(data_dir, "*.png")))
-        self.label_files = [path.replace(".png", ".txt") for path in self.img_files]
+        self.img_files = sorted(glob.glob(os.path.join(data_dir, "images/*.png")))
+        self.label_files = [path.replace("images", "labels").replace("png", "txt") for path in tqdm(self.img_files)]
         self.category = {}
         for i, name in enumerate(class_names):
             self.category[name.replace(" ", "-")] = i
@@ -28,7 +30,10 @@ class UCASAODDataset(BaseDataset):
             y3.append(float(line[6]))
             x4.append(float(line[7]))
             y4.append(float(line[8]))
-            label.append(self.category[line[0]])
+            if label_path.split('\\')[3][0] == "C":
+                label.append(0)
+            else:  # "P"
+                label.append(1)
 
         num_targets = len(label)
         if not num_targets:
