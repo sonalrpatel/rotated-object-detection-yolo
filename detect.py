@@ -43,7 +43,7 @@ class Detect:
             plot_boxes(img_path, box, self.class_names, self.args.img_size, save_folder)
 
     def detect(self):
-        dataset = ImageDataset(os.path.join(self.args.data_folder, "detect"), img_size=self.args.img_size,
+        dataset = ImageDataset(os.path.join(self.args.data_folder, "train/images"), img_size=self.args.img_size,
                                ext=self.args.ext)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=self.args.batch_size, shuffle=False)
 
