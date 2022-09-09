@@ -8,9 +8,9 @@ from lib.load import load_data
 
 
 if __name__ == "__main__":
-    #train_dataset, train_dataloader = load_data("data/trash", "custom", "train", 416, 1000, batch_size=1, mosaic=False, multiscale=False)
-    #train_dataset, train_dataloader = load_data("data/DOTA", "DOTA", "train", 800, 600, batch_size=1, mosaic=False, multiscale=False)
-    train_dataset, train_dataloader = load_data("data/UCAS_AOD_sample", "UCAS_AOD", "train", 416, 640, batch_size=1, mosaic=False, multiscale=False)
+    train_dataset, train_dataloader = load_data("data/UCAS_AOD_sample", "UCAS_AOD", "train",
+                                                img_size=416, sample_size=640, batch_size=1,
+                                                augment=False, mosaic=False, multiscale=False)
 
     for i, (img_path, imgs, targets) in enumerate(train_dataloader):
         print(targets)

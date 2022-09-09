@@ -22,14 +22,14 @@ class UCASAODDataset(BaseDataset):
         x1, y1, x2, y2, x3, y3, x4, y4, label = [], [], [], [], [], [], [], [], []
         for line in lines:
             line = line.split('\t')
-            x1.append(float(line[1]))
-            y1.append(float(line[2]))
-            x2.append(float(line[3]))
-            y2.append(float(line[4]))
-            x3.append(float(line[5]))
-            y3.append(float(line[6]))
-            x4.append(float(line[7]))
-            y4.append(float(line[8]))
+            x1.append(float(line[0]))
+            y1.append(float(line[1]))
+            x2.append(float(line[2]))
+            y2.append(float(line[3]))
+            x3.append(float(line[4]))
+            y3.append(float(line[5]))
+            x4.append(float(line[6]))
+            y4.append(float(line[7]))
             if label_path.split('\\')[3][0] == "C":
                 label.append(0)
             else:  # "P"

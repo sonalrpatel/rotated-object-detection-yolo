@@ -227,7 +227,7 @@ class BaseDataset(Dataset):
             if not ((-np.pi / 2 < theta).all() or (theta <= np.pi / 2).all()):
                 raise AssertionError("Theta of oriented bounding boxes are not within the boundary (-pi / 2, pi / 2]")
 
-            # Make the height of bounding boxes always larger then it's width
+            # Make the height of bounding boxes always larger than it's width
             for i in range(num_targets):
                 if w[i] > h[i]:
                     temp1, temp2 = h[i].clone(), w[i].clone()
