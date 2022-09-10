@@ -50,7 +50,7 @@ As the paper suggested, I get a better results from **f(ariou) = exp(1-ariou)-1*
 2. Download  pretrained weights</br>
     [weights](https://drive.google.com/uc?export=download&id=1zPSXWwbmNwUV4OHFuKoILByx_hetPBXM)
     
-3. Make sure your files arrangment looks like the following</br>
+3. Make sure your file's arrangement looks like the following</br>
     Note that each of your dataset folder in `data` should split into three files, namely `train`, `test`, and `detect`.
     ```
     R-YOLOv4/

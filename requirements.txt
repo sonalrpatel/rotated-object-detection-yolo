@@ -1,7 +1,10 @@
-numpy
-Pillow
+numpy~=1.23.1
+Pillow~=9.2.0
 opencv-contrib-python-headless
 tensorboard
-terminaltables
-tqdm
-shapely
+terminaltables~=3.1.10
+tqdm~=4.64.0
+shapely~=1.7.1
+torch~=1.12.1
+opencv-python~=4.6.0.66
+torchvision~=0.13.1

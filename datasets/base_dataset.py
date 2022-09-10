@@ -40,7 +40,7 @@ class ImageDataset(Dataset):
         return len(self.files)
 
     def __getitem__(self, index):
-        #  Hight in {320, 416, 512, 608, ... 320 + 96 * n}
+        #  Height in {320, 416, 512, 608, ... 320 + 96 * n}
         #  Width in {320, 416, 512, 608, ... 320 + 96 * m}
         img_path = self.files[index % len(self.files)]
 
@@ -144,7 +144,7 @@ class BaseDataset(Dataset):
     def load_mosaic(self, index):
         """
         Loads 1 image + 3 random images into a 4-image mosaic.
-        Each image is cropped based on the sameple_size.
+        Each image is cropped based on the sample_size.
         A larger sample size means more information in each image would be used.
         """
 
@@ -219,7 +219,7 @@ class BaseDataset(Dataset):
         if os.path.exists(label_path):
             x, y, w, h, theta, label, num_targets = self.load_files(label_path)
 
-            # Return zero length tersor if there is no object in the image
+            # Return zero length tensor if there is no object in the image
             if not num_targets:
                 return torch.zeros((0, 7))
 
@@ -259,7 +259,7 @@ class BaseDataset(Dataset):
             h = h[mask]
             theta = theta[mask]
 
-            # Relocalize coordinates based on images padding or mosaic augmentation
+            # Re-localize coordinates based on images padding or mosaic augmentation
             x1 = (x - w / 2) + pad[0]
             y1 = (y - h / 2) + pad[2]
             x2 = (x + w / 2) + pad[1]

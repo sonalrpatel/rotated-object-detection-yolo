@@ -30,10 +30,7 @@ class UCASAODDataset(BaseDataset):
             y3.append(float(line[5]))
             x4.append(float(line[6]))
             y4.append(float(line[7]))
-            if label_path.split('\\')[3][0] == "C":
-                label.append(0)
-            else:  # "P"
-                label.append(1)
+            label.append(float(line[13]))
 
         num_targets = len(label)
         if not num_targets:
