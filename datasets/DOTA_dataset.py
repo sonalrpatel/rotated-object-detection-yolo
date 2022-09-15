@@ -2,7 +2,6 @@ import os
 import numpy as np
 import torch
 import glob
-from tqdm import tqdm
 
 from datasets.base_dataset import BaseDataset
 
@@ -12,17 +11,11 @@ class DOTADataset(BaseDataset):
                  normalized_labels=False):
         super().__init__(img_size, sample_size, augment, mosaic, multiscale, normalized_labels)
         self.img_files = sorted(glob.glob(os.path.join(data_dir, "images/*.png")))
-        self.label_files = [path.replace("images", "labels").replace("png", "txt") for path in tqdm(self.img_files)]
+        self.label_files = [path.replace("images", "labels").replace("png", "txt") for path in self.img_files]
         self.verify_path()
         self.category = {}
         for i, name in enumerate(class_names):
             self.category[name.replace(" ", "-")] = i
-
-    def verify_path(self):
-        for i, file in tqdm(enumerate(self.label_files)):
-            if not(os.path.exists(file)):
-                self.label_files.pop(i)
-                self.img_files.pop(i)
 
     def load_files(self, label_path):
         lines = open(label_path, 'r').readlines()

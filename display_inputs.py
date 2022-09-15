@@ -4,11 +4,11 @@ sys.path.append('../R-YOLOv4')
 import cv2 as cv
 import numpy as np
 import os
-from lib.load import load_data
+from utils.load import load_data
 
 
 if __name__ == "__main__":
-    train_dataset, train_dataloader = load_data("data/UCAS_AOD_sample", "UCAS_AOD", "train",
+    train_dataset, train_dataloader = load_data("data/UCAS_AOD", "UCAS_AOD", "sample",
                                                 img_size=416, sample_size=640, batch_size=1,
                                                 augment=False, mosaic=False, multiscale=False)
 

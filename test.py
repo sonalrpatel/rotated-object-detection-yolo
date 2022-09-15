@@ -5,10 +5,10 @@ import tqdm
 import glob
 from terminaltables import AsciiTable
 
-from lib.options import TestOptions
-from lib.post_process import post_process, skewiou
-from lib.load import load_data
-from lib.utils import load_class_names
+from utils.options import TestOptions
+from utils.post_process import post_process, skewiou
+from utils.load import load_data
+from utils.utils import load_class_names
 from model.yolo import Yolo
 
 
@@ -178,9 +178,9 @@ class Test:
         self.model.eval()
 
         # Get dataloader
-        test_dataset, test_dataloader = load_data(self.args.data_folder, self.args.dataset, "test", self.args.img_size,
-                                                  batch_size=self.args.batch_size, shuffle=False, augment=False,
-                                                  mosaic=False, multiscale=False)
+        test_dataset, test_dataloader = load_data(self.args.data_folder, self.args.dataset, self.args.action,
+                                                  self.args.img_size, batch_size=self.args.batch_size,
+                                                  shuffle=False, augment=False, mosaic=False, multiscale=False)
 
         print("Compute mAP...")
 

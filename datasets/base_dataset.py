@@ -3,12 +3,13 @@ import random
 import os
 import numpy as np
 from PIL import Image
+from tqdm import tqdm
 import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 
-from lib.augmentations import vertical_flip, horisontal_flip, rotate, hsv, gaussian_noise, mixup
+from utils.augmentations import vertical_flip, horisontal_flip, rotate, hsv, gaussian_noise, mixup
 
 
 def pad_to_square(img, pad_value):
@@ -16,8 +17,10 @@ def pad_to_square(img, pad_value):
     dim_diff = np.abs(h - w)
     # (upper / left) padding and (lower / right) padding
     pad1, pad2 = dim_diff // 2, dim_diff - dim_diff // 2
+
     # Determine padding
     pad = (0, 0, pad1, pad2) if h <= w else (pad1, pad2, 0, 0)
+
     # Add padding
     img = F.pad(img, pad, "constant", value=pad_value)
 
@@ -46,10 +49,13 @@ class ImageDataset(Dataset):
 
         # Extract image as PyTorch tensor
         img = transforms.ToTensor()(Image.open(img_path).convert('RGB'))
+
         # Pad to square resolution
         img, _ = pad_to_square(img, 0)
+
         # Resize
         img = resize(img, self.img_size)
+
         # transform = transforms.ToPILImage(mode="RGB")
         # image = transform(img)
         # image.show()
@@ -73,6 +79,9 @@ class BaseDataset(Dataset):
         self.img_files = None
         self.label_files = None
         self.category = None
+
+    def __len__(self):
+        return len(self.img_files)
 
     def __getitem__(self, index):
         if self.mosaic:
@@ -104,24 +113,31 @@ class BaseDataset(Dataset):
 
         return self.img_files[index], img, targets
 
+    def verify_path(self):
+        for i, file in tqdm(enumerate(self.label_files)):
+            if not(os.path.exists(file)):
+                self.label_files.pop(i)
+                self.img_files.pop(i)
+
     def collate_fn(self, batch):
         paths, imgs, targets = list(zip(*batch))
+
         # # Add sample index to targets
         # for i, boxes in enumerate(targets):
         #     boxes[:, 0] = i
         targets = torch.cat(targets, 0)
+
         # Selects new image size every tenth batch
         if self.multiscale and self.batch_count % 10 == 0:
             self.img_size = random.choice(range(self.min_size, self.max_size + 1, 32))
+
         # Resize images to input shape
         imgs = torch.stack([resize(img, self.img_size) for img in imgs])
+
         # Batch count
         self.batch_count += 1
 
         return paths, imgs, targets
-
-    def __len__(self):
-        return len(self.img_files)
 
     def load_image(self, index):
         img_path = self.img_files[index]

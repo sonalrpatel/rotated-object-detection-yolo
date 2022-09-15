@@ -3,10 +3,10 @@ import time
 import os
 import glob
 
-from lib.options import DetectOptions
-from lib.plot import plot_boxes
-from lib.post_process import post_process
-from lib.load import load_class_names
+from utils.options import DetectOptions
+from utils.plot import plot_boxes
+from utils.post_process import post_process
+from utils.load import load_class_names
 from datasets.base_dataset import ImageDataset
 from model.yolo import Yolo
 
@@ -43,8 +43,8 @@ class Detect:
             plot_boxes(img_path, box, self.class_names, self.args.img_size, save_folder)
 
     def detect(self):
-        dataset = ImageDataset(os.path.join(self.args.data_folder, "train/images"), img_size=self.args.img_size,
-                               ext=self.args.ext)
+        data_dir = os.path.join(self.args.data_folder, os.path.join(self.args.action), "images")
+        dataset = ImageDataset(folder_path=data_dir, img_size=self.args.img_size, ext=self.args.ext)
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=self.args.batch_size, shuffle=False)
 
         self.load_model()
@@ -53,7 +53,6 @@ class Detect:
         start = time.time()
         for img_path, img in dataloader:
             boxes, imgs = [], []
-
             img = img.to(self.device)
 
             with torch.no_grad():
@@ -69,7 +68,7 @@ class Detect:
                     if b is None:
                         break
                     num += len(b)
-                print("{}-> {} objects found".format(img_path, num))
+                print("{} -> {} objects found".format(img_path, num))
                 print("Inference time : ", round(temp1 - temp, 5))
                 print("Post-processing time : ", round(temp2 - temp1, 5))
                 print('-----------------------------------')
