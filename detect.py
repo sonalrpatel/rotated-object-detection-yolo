@@ -3,12 +3,12 @@ import time
 import os
 import glob
 
-from utils.options import DetectOptions
+from options import DetectOptions
+from model.yolo import Yolo
 from utils.plot import plot_boxes
 from utils.post_process import post_process
-from utils.load import load_class_names
+from datasets.load_dataset import load_class_names
 from datasets.base_dataset import ImageDataset
-from model.yolo import Yolo
 
 
 class Detect:

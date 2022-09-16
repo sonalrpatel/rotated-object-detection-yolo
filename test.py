@@ -5,9 +5,9 @@ import tqdm
 import glob
 from terminaltables import AsciiTable
 
-from utils.options import TestOptions
+from options import TestOptions
+from datasets.load_dataset import load_data
 from utils.post_process import post_process, skewiou
-from utils.load import load_data
 from utils.utils import load_class_names
 from model.yolo import Yolo
 

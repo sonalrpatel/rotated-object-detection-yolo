@@ -7,11 +7,11 @@ import shutil
 import json
 from terminaltables import AsciiTable
 
+from options import TrainOptions
 from model.yolo import Yolo
-from utils.load import load_data
+from datasets.load_dataset import load_data
 from utils.scheduler import CosineAnnealingWarmupRestarts
 from utils.logger import *
-from utils.options import TrainOptions
 
 os.environ['CUDA_LAUNCH_BLOCKING'] = "1"
 
