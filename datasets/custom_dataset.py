@@ -13,9 +13,9 @@ class CustomDataset(BaseDataset):
         super().__init__(img_size, sample_size, augment, mosaic, multiscale, normalized_labels)
         self.img_files = sorted(glob.glob(os.path.join(data_dir, "*.jpg")))
         self.label_files = [path.replace(".jpg", ".txt") for path in self.img_files]
-        self.verify_path()
+        self.verify_img_label()
 
-    def load_files(self, label_path):
+    def load_label(self, label_path):
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')
             boxes = torch.from_numpy(np.loadtxt(label_path).reshape(-1, 6))

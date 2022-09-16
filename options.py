@@ -4,8 +4,7 @@ import argparse
 class TrainOptions:
     def __init__(self):
         self.parser = argparse.ArgumentParser()
-        self.parser.add_argument("--data_folder", type=str, default="data/Drone",
-                                 help="path to sample dataset")
+        self.parser.add_argument("--data_folder", type=str, default="data/Drone", help="path to sample dataset")
         self.parser.add_argument("--action", type=str, default="sample")
         self.parser.add_argument("--weights_path", type=str, default="weights/pretrained/yolov4.pth",
                                  help="path to pretrained weights file")
@@ -26,7 +25,8 @@ class TrainOptions:
                                  help="if set, disable mosaic data augmentation in training")
         self.parser.add_argument("--no_multiscale", type=bool, default=True,
                                  help="if set, disable multiscale data in training")
-        self.parser.add_argument("--dataset", type=str, default="Drone", choices=["UCAS_AOD", "DOTA", "custom"],
+        self.parser.add_argument("--dataset", type=str, default="Drone",
+                                 choices=["UCAS_AOD", "DOTA", "Drone", "custom"],
                                  help="specify dataset to use for training")
 
     def parse(self):

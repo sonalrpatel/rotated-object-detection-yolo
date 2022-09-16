@@ -2,9 +2,10 @@ import os
 import torch
 
 from utils.utils import load_class_names
-from custom_dataset import CustomDataset
-from UCASAOD_dataset import UCASAODDataset
-from DOTA_dataset import DOTADataset
+from datasets.custom_dataset import CustomDataset
+from datasets.UCASAOD_dataset import UCASAODDataset
+from datasets.DOTA_dataset import DOTADataset
+from datasets.Drone_dataset import DroneDataset
 
 
 def load_data(data_dir, dataset, action, img_size=416, sample_size=600, batch_size=4, shuffle=True, augment=True,
@@ -18,6 +19,9 @@ def load_data(data_dir, dataset, action, img_size=416, sample_size=600, batch_si
     elif dataset == "DOTA":
         dataset = DOTADataset(data_dir, class_names, img_size=img_size, sample_size=sample_size, augment=augment,
                               mosaic=mosaic, multiscale=multiscale)
+    elif dataset == "Drone":
+        dataset = DroneDataset(data_dir, class_names, img_size=img_size, sample_size=sample_size, augment=augment,
+                               mosaic=mosaic, multiscale=multiscale)
     elif dataset == "custom":
         dataset = CustomDataset(data_dir, img_size=img_size, augment=augment, sample_size=sample_size,
                                 mosaic=mosaic, multiscale=multiscale)

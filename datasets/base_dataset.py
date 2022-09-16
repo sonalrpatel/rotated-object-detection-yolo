@@ -78,6 +78,7 @@ class BaseDataset(Dataset):
 
         self.img_files = None
         self.label_files = None
+        self.label_dict = None
         self.category = None
 
     def __len__(self):
@@ -113,7 +114,7 @@ class BaseDataset(Dataset):
 
         return self.img_files[index], img, targets
 
-    def verify_path(self):
+    def verify_img_label(self):
         for i, file in tqdm(enumerate(self.label_files)):
             if not(os.path.exists(file)):
                 self.label_files.pop(i)
@@ -230,10 +231,10 @@ class BaseDataset(Dataset):
         Returns:
             Normalized labels of objects -> [batch_index, label, x, y, w, h, theta] -> torch.Size([num_targets, 7])
         """
-        label_path = self.label_files[index % len(self.img_files)].rstrip()
+        base_name = self.img_files[index].replace("\\", "/").split("/")[-1]
 
-        if os.path.exists(label_path):
-            x, y, w, h, theta, label, num_targets = self.load_files(label_path)
+        if self.label_dict.get(base_name) is not None:
+            x, y, w, h, theta, label, num_targets = self.load_label(base_name)
 
             # Return zero length tensor if there is no object in the image
             if not num_targets:
@@ -295,11 +296,11 @@ class BaseDataset(Dataset):
             targets[:, 4] = w
             targets[:, 5] = h
             targets[:, 6] = theta
+
             return targets
-
         else:
-            print(label_path)
-            assert False, "Label file not found"
+            print(base_name)
+            assert False, "It's label file not found"
 
-    def load_files(self, label_path):
+    def load_label(self, base_name):
         raise NotImplementedError

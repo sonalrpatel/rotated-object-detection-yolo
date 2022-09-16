@@ -1,28 +1,36 @@
 import os
 import numpy as np
+import pandas as pd
 import torch
 import glob
 
 from datasets.base_dataset import BaseDataset
 
 
-class DOTADataset(BaseDataset):
+class DroneDataset(BaseDataset):
     def __init__(self, data_dir, class_names, img_size=416, sample_size=600, augment=True, mosaic=True, multiscale=True,
                  normalized_labels=False):
         super().__init__(img_size, sample_size, augment, mosaic, multiscale, normalized_labels)
-        self.img_files = sorted(glob.glob(os.path.join(data_dir, "images/*.png")))
-        self.label_files = [path.replace("images", "labels").replace("png", "txt") for path in self.img_files]
-        self.verify_img_label()
+        self.img_files = sorted(glob.glob(os.path.join(data_dir, "*.png")))
+        self.label_files = sorted(glob.glob(os.path.join(data_dir, "*.csv")))
+
+        self.label_dict = {}
+        label_df = pd.read_csv(self.label_files[0], ',')
+        for frame in sorted(list(set(label_df['frame_name']))):
+            self.label_dict[frame] = label_df.loc[label_df['frame_name'] == frame, 'x1':].values.tolist()
+
         self.category = {}
         for i, name in enumerate(class_names):
             self.category[name.replace(" ", "-")] = i
 
-    def load_label(self, label_path):
-        lines = open(label_path, 'r').readlines()
+        # self.verify_img_label()
+
+    def load_label(self, base_name):
+        # x1, y1, x2, y2, x3, y3, x4, y4, category
+        lines = self.label_dict[base_name]
 
         x1, y1, x2, y2, x3, y3, x4, y4, label = [], [], [], [], [], [], [], [], []
-        for line in lines[2:]:
-            line = line.split(' ')
+        for line in lines:
             x1.append(float(line[0]))
             y1.append(float(line[1]))
             x2.append(float(line[2]))

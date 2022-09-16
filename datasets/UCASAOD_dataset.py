@@ -12,12 +12,12 @@ class UCASAODDataset(BaseDataset):
         super().__init__(img_size, sample_size, augment, mosaic, multiscale, normalized_labels)
         self.img_files = sorted(glob.glob(os.path.join(data_dir, "images/*.png")))
         self.label_files = [path.replace("images", "labels").replace("png", "txt") for path in self.img_files]
-        self.verify_path()
+        self.verify_img_label()
         self.category = {}
         for i, name in enumerate(class_names):
             self.category[name.replace(" ", "-")] = i
 
-    def load_files(self, label_path):
+    def load_label(self, label_path):
         lines = open(label_path, 'r').readlines()
 
         x1, y1, x2, y2, x3, y3, x4, y4, label = [], [], [], [], [], [], [], [], []
