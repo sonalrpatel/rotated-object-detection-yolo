@@ -1,15 +1,12 @@
-import sys
-sys.path.append('../R-YOLOv4')
-
+import os
 import cv2 as cv
 import numpy as np
-import os
-from utils.load import load_data
+from datasets.load_dataset import load_data
 
 
 if __name__ == "__main__":
-    train_dataset, train_dataloader = load_data("data/UCAS_AOD", "UCAS_AOD", "sample",
-                                                img_size=416, sample_size=640, batch_size=1,
+    train_dataset, train_dataloader = load_data("data/Drone", "Drone", "sample",
+                                                img_size=1248, sample_size=640, batch_size=1,
                                                 augment=False, mosaic=False, multiscale=False)
 
     for i, (img_path, imgs, targets) in enumerate(train_dataloader):
@@ -30,7 +27,7 @@ if __name__ == "__main__":
         cv.destroyAllWindows()
 
         img[:, 1:] = img[:, 1:] * 255.0
-        output_path = os.path.join("outputs", "display")
+        output_path = os.path.join("outputs", "display_gt")
         if not os.path.exists(output_path):
             os.mkdir(output_path) 
         filename = os.path.join(output_path, img_path[0].split('\\')[-1])
